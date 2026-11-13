@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <body>
+  <aside class="sidebar" id="sidebar" th:fragment="sidebar">
+   <a aria-label="FireGuard home" class="brand" th:href="@{/dashboard}">
+    <img alt="FireGuard Monitoring System" class="brand-logo" th:src="@{/images/Logo_big.png}"/>
+   </a>
+   <div class="nav-caption">
+    WORKSPACE
+   </div>
+   <nav aria-label="Main navigation" class="nav-menu">
+    <a th:classappend="${page == 'dashboard'} ? ' active' : ''" th:href="@{/dashboard}">
+     <span class="nav-icon">
+      ◫
+     </span>
+     Dashboard
+    </a>
+    <a th:classappend="${page == 'buildings'} ? ' active' : ''" th:href="@{/buildings}">
+     <span class="nav-icon">
+      ▥
+     </span>
+     Buildings
+    </a>
+    <a th:classappend="${page == 'floors'} ? ' active' : ''" th:href="@{/floors}">
+     <span class="nav-icon">
+      ▤
+     </span>
+     Floors
+    </a>
+    <a th:classappend="${page == 'locations'} ? ' active' : ''" th:href="@{/locations}">
+     <span class="nav-icon">
+      ⌗
+     </span>
+     Locations
+    </a>
+    <a th:classappend="${page == 'sensors'} ? ' active' : ''" th:href="@{/sensors}">
+     <span class="nav-icon">
+      ◉
+     </span>
+     Sensors
+    </a>
+    <div class="nav-caption nav-group">
+     OPERATIONS
+    </div>
+    <a th:classappend="${page == 'simulation'} ? ' active' : ''" th:href="@{/simulation}">
+     <span class="nav-icon">
+      ▷
+     </span>
+     Simulation
+    </a>
+    <a th:classappend="${page == 'visualizer'} ? ' active' : ''" th:href="@{/visualizer}">
+     <span class="nav-icon">
+      ⬡
+     </span>
+     3D Visualizer
+    </a>
+    <a th:classappend="${page == 'alerts'} ? ' active' : ''" th:href="@{/alerts}">
+     <span class="nav-icon">
+      ⚑
+     </span>
+     Fire Alerts
+    </a>
+    <a th:classappend="${page == 'reports'} ? ' active' : ''" th:href="@{/reports}">
+     <span class="nav-icon">
+      ▥
+     </span>
+     Reports
+    </a>
+   </nav>
+   <div class="sidebar-bottom">
+    <span class="status-dot">
+    </span>
+    Simulation environment
+    <small>
+     FireGuard v2.0
+    </small>
+   </div>
+  </aside>
+  <header class="topbar" th:fragment="topbar">
+   <div class="topbar-left">
+    <button aria-expanded="false" aria-label="Toggle navigation" class="icon-button menu-toggle" id="menuToggle" type="button">
+     ☰
+    </button>
+    <span class="breadcrumb">
+     Workspace
+     <span>
+      /
+     </span>
+     <strong th:text="${pageTitle}">
+      Dashboard
+     </strong>
+    </span>
+   </div>
+   <div class="topbar-right">
+    <span class="environment-pill">
+     <span class="status-dot">
+     </span>
+     Simulation mode
+    </span>
+    <button aria-label="Toggle color theme" class="icon-button" id="themeToggle" title="Toggle color theme" type="button">
+     ◐
+    </button>
+   </div>
+  </header>
+  <footer class="footer" th:fragment="footer">
+   <span>
+    © 2019 –
+    <span id="year">
+     2026
+    </span>
+    <span> · Designed & Developed by </span>
+    <a class="footer-author" href="https://kkargas.com" rel="noopener noreferrer" target="_blank">
+     Konstantinos Kargas
+    </a>
+    · FireGuard
+   </span>
+   <span>
+    Educational fire-monitoring simulation · Not a real safety system
+   </span>
+  </footer>
+ </body>
+</html>

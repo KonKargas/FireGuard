@@ -1,0 +1,124 @@
+/* Read-only placement aid alongside New/Edit Location. */
+
+.location-form-layout {
+    display: grid;
+    grid-template-columns: minmax(0,1.12fr) minmax(355px,.88fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.location-form-layout>.panel {
+    min-width: 0;
+}
+
+.location-main-form {
+    width: 100%;
+    max-width: none;
+}
+
+.location-mini-panel {
+    padding: 22px;
+    position: sticky;
+    top: 18px;
+}
+
+.location-mini-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: start;
+    flex-wrap: wrap;
+}
+
+.location-mini-header h2 {
+    font-size: 17px;
+    margin: 0 0 6px;
+}
+
+.location-mini-header p {
+    margin: 0;
+}
+
+.location-mini-status {
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    color: var(--muted);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.location-mini-status.is-ok {
+    color: #289879;
+    border-color: #289879;
+}
+
+.location-mini-status.is-error {
+    color: #e66f65;
+    border-color: #e66f65;
+}
+
+.location-mini-canvas {
+    margin-top: 18px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.location-mini-canvas svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 280px;
+    max-height: 560px;
+}
+
+.location-mini-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.location-mini-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.location-mini-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.location-mini-dot.existing {
+    background: #699bb8;
+}
+
+.location-mini-dot.proposed {
+    background: #31b997;
+}
+
+.location-mini-dot.overlap {
+    background: #e75c57;
+}
+
+.location-mini-help {
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 14px 0 0;
+}
+
+@media(max-width:1080px) {
+    .location-form-layout {
+        grid-template-columns: 1fr;
+    }
+    .location-mini-panel {
+        position: static;
+    }
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="stylesheet" th:href="@{/css/floors.css}"/>
+  <link rel="stylesheet" th:href="@{/css/locations.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        LOCATION DETAILS
+       </p>
+       <h1 th:text="${room.name}">
+        Room 101
+       </h1>
+       <p class="subheading">
+        <a th:href="@{/buildings/{id}(id=${buildingId})}" th:text="${buildingName}">
+        </a>
+        /
+        <a th:href="@{/floors/{id}(id=${floorId})}" th:text="${floorName}">
+        </a>
+       </p>
+      </div>
+      <div class="fg-inline">
+       <a class="fg-btn fg-outline" th:href="@{/locations/plan(floorId=${floorId})}">
+        Floor plan
+       </a>
+       <a class="fg-btn fg-primary" th:href="@{/locations/{id}/edit(id=${room.id})}">
+        Edit Room
+       </a>
+      </div>
+     </section>
+     <div th:replace="~{fragments/feedback :: messages}">
+     </div>
+     <div class="fg-detail-grid">
+      <section class="panel">
+       <div class="panel-header">
+        <h2>
+         Geometry
+        </h2>
+        <span class="fg-chip" th:text="${room.code}">
+         101
+        </span>
+       </div>
+       <dl class="building-facts">
+        <dt>
+         X / Y / Z
+        </dt>
+        <dd th:text="${room.positionX + ' / ' + room.positionY + ' / ' + room.positionZ + ' m'}">
+        </dd>
+        <dt>
+         Width / Depth / Height
+        </dt>
+        <dd th:text="${room.widthMeters + ' / ' + room.depthMeters + ' / ' + room.heightMeters + ' m'}">
+        </dd>
+        <dt>
+         Description
+        </dt>
+        <dd th:text="${room.description ?: 'Not provided'}">
+        </dd>
+       </dl>
+      </section>
+      <section class="panel">
+       <div class="panel-header">
+        <h2>
+         Installed sensors
+        </h2>
+        <span class="fg-chip" th:text="${#lists.size(sensors)} + ' sensors'">
+        </span>
+       </div>
+       <div class="fg-floor-row" th:each="s : ${sensors}">
+        <span class="building-emblem">
+         ◉
+        </span>
+        <div>
+         <a th:href="@{/sensors/{id}(id=${s.id})}">
+          <strong th:text="${s.type}">
+          </strong>
+          <small th:text="${s.code}">
+          </small>
+         </a>
+        </div>
+       </div>
+       <p class="fg-muted" th:if="${#lists.isEmpty(sensors)}">
+        No sensors installed.
+       </p>
+      </section>
+     </div>
+     <section class="panel fg-danger-zone">
+      <h2>
+       Danger zone
+      </h2>
+      <p class="fg-muted">
+       Permanently deletes this location, its sensors, all sensor measurements and all related fire alerts. This cannot be undone.
+      </p>
+      <form data-confirm="Permanently delete this location, its sensors, measurements and fire alerts? This cannot be undone." method="post" th:action="@{/locations/{id}/delete(id=${room.id})}">
+       <button class="fg-btn fg-danger" type="submit">
+        Delete Location
+       </button>
+      </form>
+     </section>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+  <script defer="" th:src="@{/js/locations.js}">
+  </script>
+ </body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="stylesheet" th:href="@{/css/floors.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        FLOOR DETAILS
+       </p>
+       <h1 th:text="${floor.name}">
+        Ground Floor
+       </h1>
+       <p class="subheading">
+        <a th:href="@{/buildings/{id}(id=${buildingId})}" th:text="${buildingName}">
+         Building
+        </a>
+        ·
+        <span th:text="'Level ' + ${floor.levelNumber}">
+         Level
+        </span>
+       </p>
+      </div>
+      <div class="fg-inline">
+       <a class="fg-btn fg-outline" th:href="@{/floors(buildingId=${buildingId})}">
+        ← Floors
+       </a>
+       <a class="fg-btn fg-primary" th:href="@{/floors/{id}/edit(id=${floor.id})}">
+        Edit Floor
+       </a>
+      </div>
+     </section>
+     <div th:replace="~{fragments/feedback :: messages}">
+     </div>
+     <div class="fg-detail-grid">
+      <section class="panel">
+       <div class="panel-header">
+        <h2>
+         Overview
+        </h2>
+        <span class="fg-chip" th:text="'Level ' + ${floor.levelNumber}">
+         Level
+        </span>
+       </div>
+       <dl class="building-facts">
+        <dt>
+         Building
+        </dt>
+        <dd>
+         <a th:href="@{/buildings/{id}(id=${buildingId})}" th:text="${buildingName}">
+          Building
+         </a>
+        </dd>
+        <dt>
+         Elevation
+        </dt>
+        <dd th:text="${floor.elevationMeters} + ' m'">
+         0 m
+        </dd>
+        <dt>
+         Created
+        </dt>
+        <dd th:text="${floor.createdAt == null} ? '—' : ${#temporals.format(floor.createdAt, 'dd MMM yyyy HH:mm')}">
+         Date
+        </dd>
+        <dt>
+         Description
+        </dt>
+        <dd th:text="${floor.description ?: 'Not provided'}">
+         Description
+        </dd>
+       </dl>
+      </section>
+      <section class="panel">
+       <div class="panel-header">
+        <h2>
+         Locations
+        </h2>
+        <span class="fg-chip" th:text="${#lists.size(locations)} + ' total'">
+         0 total
+        </span>
+       </div>
+       <p class="fg-muted" th:if="${#lists.isEmpty(locations)}">
+        No locations added yet. Create a room to get started.
+       </p>
+       <div class="fg-floor-row" th:each="loc : ${locations}">
+        <span class="building-emblem">
+         ⌗
+        </span>
+        <div>
+         <a th:href="@{/locations/{id}(id=${loc.id})}" th:text="${loc.name}">
+          Room
+         </a>
+         <small th:text="'Code ' + ${loc.code}">
+          Code
+         </small>
+        </div>
+       </div>
+       <div class="fg-inline">
+        <a class="fg-btn fg-primary" th:href="@{/locations/new(floorId=${floor.id})}">
+         + Add Location
+        </a>
+        <a class="fg-btn fg-outline" th:href="@{/locations/plan(floorId=${floor.id})}">
+         2D Floor Plan
+        </a>
+        <a class="fg-btn fg-outline" th:href="@{/locations(floorId=${floor.id})}">
+         All Locations
+        </a>
+       </div>
+      </section>
+     </div>
+     <section class="panel fg-danger-zone">
+      <h2>
+       Danger zone
+      </h2>
+      <p class="fg-muted">
+       Floors containing locations cannot be deleted.
+      </p>
+      <form data-confirm="Delete this floor? This action cannot be undone." method="post" th:action="@{/floors/{id}/delete(id=${floor.id})}">
+       <input name="buildingId" th:value="${buildingId}" type="hidden"/>
+       <button class="fg-btn fg-danger" th:disabled="${!#lists.isEmpty(locations)}" type="submit">
+        Delete Floor
+       </button>
+      </form>
+     </section>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

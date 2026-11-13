@@ -1,0 +1,82 @@
+/* Building-specific styles. Shared .fg-* rules live in management.css. */
+
+.building-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(min(100%,290px),1fr));
+    gap: 18px;
+}
+
+.building-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 235px;
+}
+
+.building-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.building-emblem {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--soft-accent);
+    color: var(--accent);
+    font-size: 24px;
+}
+
+.building-card h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.building-card .fg-muted {
+    margin-bottom: 8px;
+}
+
+.building-card .fg-small {
+    margin-bottom: 18px;
+}
+
+.building-form {
+    max-width: 840px;
+}
+
+.building-facts {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 14px;
+    font-size: 13px;
+    margin: 0;
+}
+
+.building-facts dt {
+    color: var(--muted);
+}
+
+.building-facts dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+@media(max-width:760px) {
+    .fg-fields,.fg-detail-grid {
+        grid-template-columns: 1fr;
+    }
+    .page-heading {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+    .building-facts {
+        grid-template-columns: 85px 1fr;
+    }
+    .fg-tools {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

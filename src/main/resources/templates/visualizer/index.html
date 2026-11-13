@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   3D Visualizer | FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/visualizer.css}"/>
+  <script type="importmap">
+   {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
+  </script>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content visual-main">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        SPATIAL MONITORING / DIGITAL TWIN
+       </p>
+       <h1>
+        3D Building Visualizer
+       </h1>
+       <p class="subheading">
+        Architectural cutaway model with clearer floors, room walls, and simulated fire alerts.
+       </p>
+      </div>
+      <a class="viz-action" th:href="@{/simulation}">
+       Open Simulation
+      </a>
+     </section>
+     <div class="viz-toolbar panel">
+      <label>
+       Building
+       <select id="buildingPicker">
+        <option value="">
+         Select a building…
+        </option>
+        <option th:each="building : ${buildings}" th:text="${building.name}" th:value="${building.id}">
+        </option>
+       </select>
+      </label>
+      <label class="viz-toggle">
+       <input checked="" id="showSensors" type="checkbox"/>
+       Show sensors
+      </label>
+      <label class="viz-toggle">
+       <input checked="" id="showLabels" type="checkbox"/>
+       Room labels
+      </label>
+      <label class="viz-toggle">
+       <input checked="" id="showShell" type="checkbox"/>
+       Building shell
+      </label>
+      <label class="viz-toggle">
+       <input checked="" id="showArchitecture" type="checkbox"/>
+       Room walls &amp; outlines
+      </label>
+      <label class="viz-toggle">
+       <input id="explodeFloors" type="checkbox"/>
+       Explode floors
+      </label>
+      <button class="viz-action secondary" id="resetView" type="button">
+       Reset camera
+      </button>
+      <button class="viz-action secondary" id="refreshView" type="button">
+       Refresh data
+      </button>
+     </div>
+     <div class="viz-layout">
+      <section class="viz-stage panel">
+       <div aria-label="Interactive 3D building model" id="viewer">
+        <div class="viz-loading" id="vizMessage">
+         Select a building to begin.
+        </div>
+       </div>
+       <div class="viz-stage-footer">
+        <span>
+         Drag to rotate · Scroll to zoom · Right-drag to pan
+        </span>
+        <span id="vizStats">
+         No building loaded
+        </span>
+       </div>
+      </section>
+      <aside class="viz-side">
+       <section class="panel viz-control-panel">
+        <h2>
+         Floors
+        </h2>
+        <p>
+         Select, hide or isolate a floor.
+        </p>
+        <div class="viz-floor-list" id="floorToggles">
+         <span class="viz-muted">
+          No floors loaded.
+         </span>
+        </div>
+        <button class="viz-action secondary full" id="showAllFloors" type="button">
+         Show all floors
+        </button>
+       </section>
+       <section class="panel viz-inspector">
+        <h2>
+         Selection
+        </h2>
+        <div class="viz-muted" id="roomInspector">
+         Click a room or sensor to inspect it.
+        </div>
+       </section>
+       <section class="panel viz-legend">
+        <h2>
+         Legend
+        </h2>
+        <div>
+         <i class="legend-spot room">
+         </i>
+         Room
+        </div>
+        <div>
+         <i class="legend-spot temp">
+         </i>
+         Temperature sensor
+        </div>
+        <div>
+         <i class="legend-spot light">
+         </i>
+         Luminosity sensor
+        </div>
+        <div>
+         <i class="legend-spot danger">
+         </i>
+         Active simulated alert
+        </div>
+       </section>
+      </aside>
+     </div>
+     <p class="viz-disclaimer">
+      Educational simulation only. 3D geometry is an inferred architectural cutaway from rectangular room data and is not a certified fire-safety plan.
+     </p>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+  <script th:src="@{/js/visualizer.js(v=3)}" type="module">
+  </script>
+ </body>
+</html>

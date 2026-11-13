@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        WORKSPACE
+       </p>
+       <h1 th:text="${pageTitle}">
+        Section
+       </h1>
+       <p class="subheading" th:text="${pageDescription}">
+        Coming soon.
+       </p>
+      </div>
+     </section>
+     <div class="panel placeholder-panel">
+      <div class="placeholder-illustration">
+       ⌘
+      </div>
+      <h2>
+       Workspace ready
+      </h2>
+      <p>
+       This section is prepared for its management screens. We'll connect it to the corresponding service in the next steps.
+      </p>
+      <a class="primary-link" th:href="@{/dashboard}">
+       ← Back to dashboard
+      </a>
+     </div>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

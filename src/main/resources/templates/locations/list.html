@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="stylesheet" th:href="@{/css/floors.css}"/>
+  <link rel="stylesheet" th:href="@{/css/locations.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        SPATIAL MANAGEMENT
+       </p>
+       <h1>
+        Locations
+       </h1>
+       <p class="subheading">
+        Rooms, geometry and sensor coverage.
+       </p>
+      </div>
+      <a class="fg-btn fg-primary" th:href="@{/locations/new(floorId=${floorId})}">
+       + Add Location
+      </a>
+     </section>
+     <div th:replace="~{fragments/feedback :: messages}">
+     </div>
+     <div class="panel floor-filter">
+      <form class="floor-filter-form" method="get" th:action="@{/locations}">
+       <label>
+        Floor
+       </label>
+       <select name="floorId">
+        <option value="">
+         All floors
+        </option>
+        <option th:each="opt : ${floorOptions}" th:selected="${opt.id == floorId}" th:text="${opt.label}" th:value="${opt.id}">
+        </option>
+       </select>
+       <button class="fg-btn fg-outline">
+        Filter
+       </button>
+      </form>
+      <input id="locationSearch" placeholder="Search rooms…" type="search"/>
+     </div>
+     <div class="panel fg-empty" th:if="${#lists.isEmpty(rooms)}">
+      <h2>
+       No rooms found
+      </h2>
+      <p>
+       Create a location to start modeling your building.
+      </p>
+     </div>
+     <div class="floor-grid">
+      <article class="panel floor-card location-card" th:attr="data-filter=${r.code + ' ' + r.name + ' ' + r.floorName + ' ' + r.buildingName}" th:each="r : ${rooms}">
+       <div class="floor-card-top">
+        <span class="floor-symbol">
+         ▦
+        </span>
+        <span class="fg-chip" th:text="${r.code}">
+         101
+        </span>
+       </div>
+       <h2 th:text="${r.name}">
+        Room
+       </h2>
+       <p class="fg-muted" th:text="${r.buildingName + ' / ' + r.floorName}">
+        Floor
+       </p>
+       <div class="floor-stats">
+        <span th:text="${r.width + ' × ' + r.depth + ' × ' + r.height + ' m'}">
+         Size
+        </span>
+        <span th:text="${'X ' + r.x + ' · Y ' + r.y + ' · Z ' + r.z}">
+         Position
+        </span>
+       </div>
+       <div class="fg-card-actions">
+        <a class="fg-btn fg-outline" th:href="@{/locations/{id}(id=${r.id})}">
+         Details
+        </a>
+        <a class="fg-btn fg-text" th:href="@{/locations/{id}/edit(id=${r.id})}">
+         Edit
+        </a>
+        <a class="fg-btn fg-text" th:href="@{/locations/plan(floorId=${r.floorId})}">
+         Floor plan
+        </a>
+       </div>
+      </article>
+     </div>
+     <p class="fg-muted" hidden="" id="locationSearchEmpty">
+      No matching rooms.
+     </p>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+  <script defer="" th:src="@{/js/locations.js}">
+  </script>
+ </body>
+</html>

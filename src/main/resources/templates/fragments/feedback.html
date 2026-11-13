@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <body>
+  <div th:fragment="messages">
+   <div class="fg-message fg-success" th:if="${success}" th:text="${success}">
+   </div>
+   <div class="fg-message fg-error" th:if="${error}" th:text="${error}">
+   </div>
+  </div>
+ </body>
+</html>

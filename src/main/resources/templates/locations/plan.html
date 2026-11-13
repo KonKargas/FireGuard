@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="stylesheet" th:href="@{/css/floors.css}"/>
+  <link rel="stylesheet" th:href="@{/css/locations.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        SPATIAL VISUALIZATION
+       </p>
+       <h1 th:text="${floor.name} + ' — Floor Plan'">
+        Floor plan
+       </h1>
+       <p class="subheading">
+        Top-down room footprint, X horizontal and Y vertical. Dimensions in meters.
+       </p>
+      </div>
+      <div class="fg-inline">
+       <a class="fg-btn fg-outline" th:href="@{/floors/{id}(id=${floor.id})}">
+        ← Floor details
+       </a>
+       <a class="fg-btn fg-primary" th:href="@{/locations/new(floorId=${floor.id})}">
+        + Add Room
+       </a>
+      </div>
+     </section>
+     <section class="panel">
+      <div class="panel-header">
+       <h2>
+        2D Spatial Layout
+       </h2>
+       <span class="fg-chip" th:text="${#lists.size(rooms)} + ' spaces'">
+       </span>
+      </div>
+      <div class="location-plan" data-empty="No rooms on this floor yet" id="floorPlan">
+       <div class="location-plan-room-data" th:attr="data-id=${r.id},data-code=${r.code},data-name=${r.name},data-x=${r.x},data-y=${r.y},data-z=${r.z},data-width=${r.width},data-depth=${r.depth},data-type=${r.type}" th:each="r : ${rooms}">
+       </div>
+      </div>
+      <div th:replace="~{fragments/feedback :: messages}">
+      </div>
+      <div class="layout-editor-controls">
+       <label>
+        <input checked="" id="layoutSnap" type="checkbox"/>
+        Snap to 0.5m grid
+       </label>
+       <span>
+        Drag a space to move it · Drag its bottom-right handle to resize
+       </span>
+      </div>
+      <section class="layout-inspector" hidden="" id="layoutInspector">
+       <strong id="layoutSelectedName">
+        Select a space
+       </strong>
+       <form action="" id="layoutEditForm" method="post">
+        <div class="layout-edit-fields">
+         <label>
+          X (m)
+          <input name="x" required="" step="0.1" type="number"/>
+         </label>
+         <label>
+          Y (m)
+          <input name="y" required="" step="0.1" type="number"/>
+         </label>
+         <label>
+          Width (m)
+          <input min="0.1" name="width" required="" step="0.1" type="number"/>
+         </label>
+         <label>
+          Depth (m)
+          <input min="0.1" name="depth" required="" step="0.1" type="number"/>
+         </label>
+        </div>
+        <button class="fg-btn fg-primary" type="submit">
+         Save position &amp; dimensions
+        </button>
+        <span class="layout-conflict" id="layoutConflict" role="status">
+        </span>
+       </form>
+      </section>
+      <div class="location-plan-legend">
+       <span>
+        ■ Space boundaries
+       </span>
+       <span>
+        Grid spacing: 1 m
+       </span>
+       <span>
+        Rooms at different Z levels may overlap in top view
+       </span>
+      </div>
+     </section>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+  <script defer="" th:src="@{/js/locations.js}">
+  </script>
+ </body>
+</html>

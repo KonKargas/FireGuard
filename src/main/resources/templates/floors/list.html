@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="stylesheet" th:href="@{/css/floors.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        SPATIAL MANAGEMENT
+       </p>
+       <h1>
+        Floors
+       </h1>
+       <p class="subheading">
+        Manage floors and elevations across your buildings.
+       </p>
+      </div>
+      <a class="fg-btn fg-primary" th:href="@{/floors/new(buildingId=${selectedBuildingId})}">
+       + Add Floor
+      </a>
+     </section>
+     <div th:replace="~{fragments/feedback :: messages}">
+     </div>
+     <div class="panel floor-filter">
+      <form class="floor-filter-form" method="get" th:action="@{/floors}">
+       <label for="buildingId">
+        Building
+       </label>
+       <select id="buildingId" name="buildingId">
+        <option value="">
+         All buildings
+        </option>
+        <option th:each="b : ${buildings}" th:selected="${selectedBuildingId != null and selectedBuildingId == b.id}" th:text="${b.name}" th:value="${b.id}">
+         Building
+        </option>
+       </select>
+       <button class="fg-btn fg-outline" type="submit">
+        Apply filter
+       </button>
+      </form>
+      <input aria-label="Search floors" id="floorSearch" placeholder="Search floor, level or building…" type="search"/>
+     </div>
+     <div class="panel fg-empty" th:if="${#lists.isEmpty(floors)}">
+      <h2>
+       No floors found
+      </h2>
+      <p th:text="${selectedBuildingId == null} ? 'Create your first building floor.' : 'No floors in the selected building yet.'">
+       No floors
+      </p>
+      <a class="fg-btn fg-primary" th:href="@{/floors/new(buildingId=${selectedBuildingId})}">
+       Add Floor
+      </a>
+     </div>
+     <div class="floor-grid" th:unless="${#lists.isEmpty(floors)}">
+      <article class="panel floor-card" th:attr="data-filter=${f.name + ' ' + f.levelNumber + ' ' + f.buildingName}" th:each="f : ${floors}">
+       <div class="floor-card-top">
+        <span class="floor-symbol">
+         ▤
+        </span>
+        <span class="fg-chip" th:text="'Level ' + ${f.levelNumber}">
+         Level
+        </span>
+       </div>
+       <h2 th:text="${f.name}">
+        Ground Floor
+       </h2>
+       <p class="fg-muted" th:text="${f.buildingName}">
+        Building
+       </p>
+       <div class="floor-stats">
+        <span th:text="${f.elevationMeters} + ' m elevation'">
+         Elevation
+        </span>
+        <span th:text="${f.locationCount} + ' locations'">
+         Locations
+        </span>
+       </div>
+       <div class="fg-card-actions">
+        <a class="fg-btn fg-outline" th:href="@{/floors/{id}(id=${f.id})}">
+         View details
+        </a>
+        <a class="fg-btn fg-text" th:href="@{/floors/{id}/edit(id=${f.id})}">
+         Edit
+        </a>
+       </div>
+      </article>
+     </div>
+     <p class="fg-muted" hidden="" id="floorSearchEmpty">
+      No floors match your search.
+     </p>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

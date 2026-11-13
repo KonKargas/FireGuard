@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        SPATIAL MANAGEMENT
+       </p>
+       <h1>
+        Buildings
+       </h1>
+       <p class="subheading">
+        Manage the buildings monitored by FireGuard.
+       </p>
+      </div>
+      <a class="fg-btn fg-primary" th:href="@{/buildings/new}">
+       + Add Building
+      </a>
+     </section>
+     <div th:replace="~{fragments/feedback :: messages}">
+     </div>
+     <div class="fg-tools">
+      <label for="buildingSearch">
+       Search buildings
+      </label>
+      <input id="buildingSearch" placeholder="Search by name, type or address..." type="search"/>
+     </div>
+     <div class="fg-empty panel" th:if="${#lists.isEmpty(buildings)}">
+      <h2>
+       No buildings yet
+      </h2>
+      <p>
+       Start by creating your first monitored building.
+      </p>
+      <a class="fg-btn fg-primary" th:href="@{/buildings/new}">
+       Create building
+      </a>
+     </div>
+     <div class="building-grid" th:unless="${#lists.isEmpty(buildings)}">
+      <article class="panel building-card" th:attr="data-filter=${building.name + ' ' + building.type + ' ' + (building.address ?: '')}" th:each="building : ${buildings}">
+       <div class="building-card-top">
+        <span class="building-emblem">
+         ▥
+        </span>
+        <span class="fg-chip" th:text="${building.type.displayName}">
+         Hotel
+        </span>
+       </div>
+       <h2 th:text="${building.name}">
+        Building
+       </h2>
+       <p class="fg-muted" th:text="${building.address ?: 'No address provided'}">
+        Address
+       </p>
+       <p class="fg-small" th:text="${building.description ?: 'No description yet'}">
+        Description
+       </p>
+       <div class="fg-card-actions">
+        <a class="fg-btn fg-outline" th:href="@{/buildings/{id}(id=${building.id})}">
+         View details
+        </a>
+        <a class="fg-btn fg-text" th:href="@{/buildings/{id}/edit(id=${building.id})}">
+         Edit
+        </a>
+       </div>
+      </article>
+     </div>
+     <p class="fg-muted" hidden="" id="searchNoResults">
+      No buildings match your search.
+     </p>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

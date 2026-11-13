@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Reports | FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/reports.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        ANALYTICS / SIMULATED DATA
+       </p>
+       <h1>
+        Reports &amp; Measurement History
+       </h1>
+       <p class="subheading">
+        Explore simulation readings and fire alert activity by building.
+       </p>
+      </div>
+      <a class="report-btn" th:href="@{/simulation}">
+       Run simulation
+      </a>
+     </section>
+     <form class="report-filter panel" method="get" th:action="@{/reports}">
+      <label>
+       Building
+       <select name="buildingId">
+        <option value="">
+         All buildings
+        </option>
+        <option th:each="b : ${buildings}" th:selected="${buildingId != null and buildingId == b.id}" th:text="${b.name}" th:value="${b.id}">
+         Building
+        </option>
+       </select>
+      </label>
+      <button class="report-btn" type="submit">
+       Apply filter
+      </button>
+      <a class="report-btn outline" th:href="@{/reports}">
+       Clear
+      </a>
+      <a class="report-btn outline export" th:href="@{/reports/measurements.csv(buildingId=${buildingId})}">
+       Export CSV (latest 5,000)
+      </a>
+     </form>
+     <section class="report-cards">
+      <article class="panel">
+       <span>
+        Measurements
+       </span>
+       <strong th:text="${report.measurements}">
+        0
+       </strong>
+       <small>
+        All recorded readings
+       </small>
+      </article>
+      <article class="panel">
+       <span>
+        Fire alerts
+       </span>
+       <strong th:text="${report.alerts}">
+        0
+       </strong>
+       <small>
+        Recorded episodes
+       </small>
+      </article>
+      <article class="panel">
+       <span>
+        Active alerts
+       </span>
+       <strong class="hot" th:text="${report.activeAlerts}">
+        0
+       </strong>
+       <small>
+        Awaiting simulation resolution
+       </small>
+      </article>
+      <article class="panel">
+       <span>
+        Resolved alerts
+       </span>
+       <strong th:text="${report.resolvedAlerts}">
+        0
+       </strong>
+       <small>
+        Closed episodes
+       </small>
+      </article>
+     </section>
+     <section class="report-metrics">
+      <article class="panel">
+       <div class="report-panel-heading">
+        <h2>
+         Temperature
+        </h2>
+        <span>
+         °C
+        </span>
+       </div>
+       <div class="metric-grid">
+        <div>
+         <small>
+          Readings
+         </small>
+         <strong th:text="${report.temperature.count}">
+          0
+         </strong>
+        </div>
+        <div>
+         <small>
+          Average
+         </small>
+         <strong th:text="${report.temperature.average == null ? '—' : #numbers.formatDecimal(report.temperature.average,1,1)}">
+          —
+         </strong>
+        </div>
+        <div>
+         <small>
+          Min / Max
+         </small>
+         <strong th:text="${report.temperature.minimum == null ? '—' : (#numbers.formatDecimal(report.temperature.minimum,1,0) + ' / ' + #numbers.formatDecimal(report.temperature.maximum,1,0))}">
+          —
+         </strong>
+        </div>
+       </div>
+       <canvas aria-label="Recent temperature readings chart" height="170" id="tempChart">
+       </canvas>
+      </article>
+      <article class="panel">
+       <div class="report-panel-heading">
+        <h2>
+         Luminosity
+        </h2>
+        <span>
+         a.u.
+        </span>
+       </div>
+       <div class="metric-grid">
+        <div>
+         <small>
+          Readings
+         </small>
+         <strong th:text="${report.luminosity.count}">
+          0
+         </strong>
+        </div>
+        <div>
+         <small>
+          Average
+         </small>
+         <strong th:text="${report.luminosity.average == null ? '—' : #numbers.formatDecimal(report.luminosity.average,1,1)}">
+          —
+         </strong>
+        </div>
+        <div>
+         <small>
+          Min / Max
+         </small>
+         <strong th:text="${report.luminosity.minimum == null ? '—' : (#numbers.formatDecimal(report.luminosity.minimum,1,1) + ' / ' + #numbers.formatDecimal(report.luminosity.maximum,1,1))}">
+          —
+         </strong>
+        </div>
+       </div>
+       <canvas aria-label="Recent luminosity readings chart" height="170" id="lumChart">
+       </canvas>
+      </article>
+     </section>
+     <section class="panel report-table-panel">
+      <div class="report-panel-heading">
+       <div>
+        <h2>
+         Recent measurements
+        </h2>
+        <p>
+         Most recent 120 readings from the selected scope. Charts use this same sample.
+        </p>
+       </div>
+       <span th:text="${#lists.size(report.recentReadings)} + ' shown'">
+        0 shown
+       </span>
+      </div>
+      <div class="empty" th:if="${#lists.isEmpty(report.recentReadings)}">
+       No measurements yet. Run a simulation to populate reports.
+      </div>
+      <div class="report-scroll" th:unless="${#lists.isEmpty(report.recentReadings)}">
+       <table class="report-table">
+        <thead>
+         <tr>
+          <th>
+           Recorded at
+          </th>
+          <th>
+           Building / floor
+          </th>
+          <th>
+           Location
+          </th>
+          <th>
+           Sensor
+          </th>
+          <th>
+           Type
+          </th>
+          <th>
+           Value
+          </th>
+          <th>
+           Reliability
+          </th>
+          <th>
+           Step
+          </th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr class="reading-row" th:attr="data-type=${m.sensorType},data-value=${m.value}" th:each="m : ${report.recentReadings}">
+          <td th:text="${#temporals.format(m.measuredAt,'dd MMM yyyy HH:mm:ss')}">
+           Time
+          </td>
+          <td th:text="${m.buildingName + ' / ' + m.floorName}">
+           Building
+          </td>
+          <td>
+           <a th:href="@{/locations/{id}(id=${m.locationId})}" th:text="${m.locationCode}">
+            Room
+           </a>
+          </td>
+          <td th:text="${m.sensorCode}">
+           Sensor
+          </td>
+          <td th:text="${m.sensorType}">
+           Type
+          </td>
+          <td th:text="${#numbers.formatDecimal(m.value,1,2)}">
+           Value
+          </td>
+          <td th:text="${#numbers.formatDecimal(m.reliability * 100,1,2)} + '%'">
+           Reliability
+          </td>
+          <td th:text="${m.simulationStep}">
+           Step
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </section>
+     <p class="report-disclaimer">
+      Educational simulation only; readings and alert events are not from real fire safety equipment. CSV exports are capped at 5,000 latest rows.
+     </p>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+  <script defer="" th:src="@{/js/reports.js}">
+  </script>
+ </body>
+</html>

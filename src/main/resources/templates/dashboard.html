@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Overview | FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        COMMAND CENTER
+       </p>
+       <h1>
+        System overview
+       </h1>
+       <p class="subheading">
+        Your building infrastructure at a glance.
+       </p>
+      </div>
+      <span class="read-only-tag">
+       ● Live database totals
+      </span>
+     </section>
+     <section aria-label="System statistics" class="metrics-grid">
+      <a class="metric-card" th:href="@{/buildings}">
+       <div class="metric-top">
+        <span class="metric-label">
+         Buildings
+        </span>
+        <span class="metric-symbol">
+         ▥
+        </span>
+       </div>
+       <div class="metric-value" th:text="${buildingsCount}">
+        0
+       </div>
+       <div class="metric-note">
+        Registered properties
+       </div>
+      </a>
+      <a class="metric-card" th:href="@{/floors}">
+       <div class="metric-top">
+        <span class="metric-label">
+         Floors
+        </span>
+        <span class="metric-symbol">
+         ▤
+        </span>
+       </div>
+       <div class="metric-value" th:text="${floorsCount}">
+        0
+       </div>
+       <div class="metric-note">
+        Mapped floor levels
+       </div>
+      </a>
+      <a class="metric-card" th:href="@{/locations}">
+       <div class="metric-top">
+        <span class="metric-label">
+         Locations
+        </span>
+        <span class="metric-symbol">
+         ⌗
+        </span>
+       </div>
+       <div class="metric-value" th:text="${locationsCount}">
+        0
+       </div>
+       <div class="metric-note">
+        Monitored rooms
+       </div>
+      </a>
+      <a class="metric-card" th:href="@{/sensors}">
+       <div class="metric-top">
+        <span class="metric-label">
+         Sensors
+        </span>
+        <span class="metric-symbol">
+         ◉
+        </span>
+       </div>
+       <div class="metric-value" th:text="${sensorsCount}">
+        0
+       </div>
+       <div class="metric-note">
+        Registered devices
+       </div>
+      </a>
+     </section>
+     <section class="content-grid">
+      <div class="panel">
+       <div class="panel-header">
+        <div>
+         <p class="eyebrow">
+          MONITORING
+         </p>
+         <h2>
+          System activity
+         </h2>
+        </div>
+        <span class="pill">
+         Database
+        </span>
+       </div>
+       <div class="activity-cards">
+        <div class="activity-row">
+         <span class="activity-icon">
+          ≋
+         </span>
+         <div>
+          <strong>
+           Measurements recorded
+          </strong>
+          <small>
+           Historical simulated readings
+          </small>
+         </div>
+         <b th:text="${measurementsCount}">
+          0
+         </b>
+        </div>
+        <div class="activity-row">
+         <span class="activity-icon alert-icon">
+          ⚑
+         </span>
+         <div>
+          <strong>
+           Alert events
+          </strong>
+          <small>
+           All stored fire alerts (not only active)
+          </small>
+         </div>
+         <b th:text="${alertsCount}">
+          0
+         </b>
+        </div>
+       </div>
+       <p class="panel-hint">
+        Live readings, charts and alert status will appear in later stages.
+       </p>
+      </div>
+      <div class="panel">
+       <div class="panel-header">
+        <div>
+         <p class="eyebrow">
+          WORKFLOW
+         </p>
+         <h2>
+          Getting started
+         </h2>
+        </div>
+       </div>
+       <div class="steps">
+        <div class="step">
+         <span>
+          01
+         </span>
+         <div>
+          <strong>
+           Create a building
+          </strong>
+          <small>
+           Set property details and floor levels.
+          </small>
+         </div>
+        </div>
+        <div class="step">
+         <span>
+          02
+         </span>
+         <div>
+          <strong>
+           Map locations
+          </strong>
+          <small>
+           Define rooms and 3D coordinates.
+          </small>
+         </div>
+        </div>
+        <div class="step">
+         <span>
+          03
+         </span>
+         <div>
+          <strong>
+           Add sensors &amp; simulate
+          </strong>
+          <small>
+           Generate readings and analyze alerts.
+          </small>
+         </div>
+        </div>
+       </div>
+      </div>
+     </section>
+     <div class="disclaimer">
+      <strong>
+       Simulation only.
+      </strong>
+      FireGuard is an educational prototype and must not be used as a real-life fire alarm or safety system.
+     </div>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

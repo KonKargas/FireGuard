@@ -1,0 +1,220 @@
+.sim-grid {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.sim-card-title {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.sim-card-title h2 {
+    margin: 0 0 6px;
+}
+
+.sim-card-title p,.sim-muted {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0;
+}
+
+.sim-icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    color: var(--accent);
+    background: var(--soft-accent);
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.sim-form {
+    display: grid;
+    gap: 13px;
+}
+
+.sim-form label {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.sim-form select {
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 12px 13px;
+    min-width: 0;
+    width: 100%;
+    font: inherit;
+    font-size: 13px;
+}
+
+.sim-form select:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+.sim-button {
+    border: 0;
+    border-radius: 9px;
+    background: var(--accent);
+    color: white;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 12px 14px;
+    cursor: pointer;
+}
+
+.sim-button:hover {
+    filter: brightness(1.08);
+}
+
+.sim-button:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+.sim-muted {
+    line-height: 1.6;
+    margin-top: 12px;
+}
+
+.sim-notice {
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    border: 1px solid var(--line);
+    font-size: 13px;
+}
+
+.sim-success {
+    background: rgba(52,211,153,.1);
+    color: #40c99a;
+}
+
+.sim-error {
+    background: var(--soft-accent);
+    color: var(--accent);
+}
+
+.sim-results {
+    margin-bottom: 18px;
+}
+
+.sim-results-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.sim-results-title .eyebrow {
+    margin-bottom: 8px;
+}
+
+.sim-counter {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.sim-table-wrap {
+    overflow: auto;
+}
+
+.sim-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.sim-table th {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 12px 13px;
+    border-bottom: 1px solid var(--line);
+}
+
+.sim-table td {
+    padding: 15px 13px;
+    border-bottom: 1px solid var(--line);
+}
+
+.sim-table td a {
+    color: var(--fg);
+    font-weight: 700;
+}
+
+.sim-table td a:hover {
+    color: var(--accent);
+}
+
+.sim-table td small {
+    display: block;
+    color: var(--muted);
+    margin-top: 6px;
+}
+
+.sim-status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.sim-status.safe {
+    background: rgba(52,211,153,.1);
+    color: #40c99a;
+}
+
+.sim-status.danger {
+    background: var(--soft-accent);
+    color: var(--accent);
+}
+
+.sim-empty {
+    min-height: 210px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.sim-empty-icon {
+    color: var(--accent);
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.sim-empty p {
+    max-width: 480px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.65;
+    margin: 12px auto 0;
+}
+
+.sim-footnote {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-top: 20px;
+}
+
+@media(max-width:850px) {
+    .sim-grid {
+        grid-template-columns: 1fr;
+    }
+}

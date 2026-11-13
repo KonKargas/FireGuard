@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/alerts.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        OPERATIONS / FIRE ALERTS
+       </p>
+       <h1 th:text="'Alert FG-' + ${alert.id}">
+        Alert
+       </h1>
+       <p class="subheading">
+        Recorded simulation event details and captured sensor readings.
+       </p>
+      </div>
+      <a class="alert-button outline" th:href="@{/alerts}">
+       ← Back to alerts
+      </a>
+     </section>
+     <div class="alert-detail-grid">
+      <section class="panel alert-detail-main">
+       <div class="alert-section-head">
+        <h2>
+         Event overview
+        </h2>
+        <span class="alert-state" th:classappend="${alert.status.name() == 'ACTIVE'} ? ' active' : ' resolved'" th:text="${alert.status}">
+         ACTIVE
+        </span>
+       </div>
+       <dl class="alert-data">
+        <div>
+         <dt>
+          Building
+         </dt>
+         <dd>
+          <a th:href="@{/buildings/{id}(id=${alert.buildingId})}" th:text="${alert.buildingName}">
+           Building
+          </a>
+         </dd>
+        </div>
+        <div>
+         <dt>
+          Floor
+         </dt>
+         <dd>
+          <a th:href="@{/floors/{id}(id=${alert.floorId})}" th:text="${alert.floorName}">
+           Floor
+          </a>
+         </dd>
+        </div>
+        <div>
+         <dt>
+          Location
+         </dt>
+         <dd>
+          <a th:href="@{/locations/{id}(id=${alert.locationId})}" th:text="${alert.locationCode + ' · ' + alert.locationName}">
+           Room
+          </a>
+         </dd>
+        </div>
+        <div>
+         <dt>
+          Simulation step
+         </dt>
+         <dd th:text="${alert.simulationStep}">
+          1
+         </dd>
+        </div>
+        <div>
+         <dt>
+          Detected at
+         </dt>
+         <dd th:text="${#temporals.format(alert.detectedAt,'dd MMM yyyy, HH:mm:ss')}">
+          Timestamp
+         </dd>
+        </div>
+        <div>
+         <dt>
+          Resolved at
+         </dt>
+         <dd th:text="${alert.resolvedAt == null ? 'Not resolved yet' : #temporals.format(alert.resolvedAt,'dd MMM yyyy, HH:mm:ss')}">
+          Timestamp
+         </dd>
+        </div>
+       </dl>
+      </section>
+      <section class="panel alert-readings">
+       <h2>
+        Detection snapshot
+       </h2>
+       <div>
+        <span>
+         Temperature
+        </span>
+        <strong th:text="${#numbers.formatDecimal(alert.temperature,1,0)} + ' °C'">
+         0 °C
+        </strong>
+       </div>
+       <div>
+        <span>
+         Luminosity
+        </span>
+        <strong th:text="${#numbers.formatDecimal(alert.luminosity,1,2)}">
+         0
+        </strong>
+       </div>
+       <div>
+        <span>
+         Combined reliability
+        </span>
+        <strong th:text="${#numbers.formatDecimal(alert.combinedReliability * 100,1,2)} + '%'">
+         0%
+        </strong>
+       </div>
+       <p class="alert-note">
+        An event is detected when T &gt; 50°C, luminosity &gt; 140, and combined reliability &gt; 90%. Historical values are snapshots from the detection step.
+       </p>
+      </section>
+     </div>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

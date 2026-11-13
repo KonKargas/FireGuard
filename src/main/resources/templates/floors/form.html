@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="stylesheet" th:href="@{/css/floors.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        SPATIAL MANAGEMENT
+       </p>
+       <h1 th:text="${pageTitle}">
+        Floor
+       </h1>
+       <p class="subheading">
+        Define its position relative to the building's vertical origin.
+       </p>
+      </div>
+      <a class="fg-btn fg-outline" th:href="${floorId == null} ? @{/floors(buildingId=${form.buildingId})} : @{/floors/{id}(id=${floorId})}">
+       ← Cancel
+      </a>
+     </section>
+     <div th:replace="~{fragments/feedback :: messages}">
+     </div>
+     <form class="panel building-form" method="post" th:action="${floorId == null} ? @{/floors} : @{/floors/{id}/edit(id=${floorId})}" th:object="${form}">
+      <div class="fg-fields">
+       <div class="fg-field fg-full">
+        <label for="buildingId">
+         Building *
+        </label>
+        <select id="buildingId" required="" th:disabled="${floorId != null}" th:field="*{buildingId}">
+         <option value="">
+          Select building
+         </option>
+         <option th:each="b : ${buildings}" th:text="${b.name}" th:value="${b.id}">
+          Building
+         </option>
+        </select>
+        <input th:field="*{buildingId}" th:if="${floorId != null}" type="hidden"/>
+       </div>
+       <div class="fg-field">
+        <label for="level">
+         Level number *
+        </label>
+        <input id="level" required="" step="1" th:field="*{levelNumber}" type="number"/>
+        <small class="fg-hint">
+         −1 basement · 0 ground · 1 first floor
+        </small>
+       </div>
+       <div class="fg-field">
+        <label for="elevation">
+         Elevation (meters) *
+        </label>
+        <input id="elevation" required="" step="0.01" th:field="*{elevationMeters}" type="number"/>
+        <small class="fg-hint">
+         Height relative to the building origin; negative values allowed.
+        </small>
+       </div>
+       <div class="fg-field fg-full">
+        <label for="name">
+         Floor name *
+        </label>
+        <input id="name" maxlength="100" placeholder="Ground Floor" required="" th:field="*{name}" type="text"/>
+       </div>
+       <div class="fg-field fg-full">
+        <label for="description">
+         Description
+        </label>
+        <textarea id="description" maxlength="500" placeholder="Optional notes about this floor" rows="4" th:field="*{description}"></textarea>
+       </div>
+      </div>
+      <div class="fg-form-actions">
+       <a class="fg-btn fg-outline" th:href="@{/floors}">
+        Back
+       </a>
+       <button class="fg-btn fg-primary" th:text="${floorId == null} ? 'Create Floor' : 'Save Changes'" type="submit">
+        Save
+       </button>
+      </div>
+     </form>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="stylesheet" th:href="@{/css/floors.css}"/>
+  <link rel="stylesheet" th:href="@{/css/locations.css}"/>
+  <link rel="stylesheet" th:href="@{/css/sensors.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        SENSOR DETAILS
+       </p>
+       <h1 th:text="${sensor.code}">
+        Sensor
+       </h1>
+       <p class="subheading">
+        <a th:href="@{/buildings/{id}(id=${building.id})}" th:text="${building.name}">
+        </a>
+        /
+        <a th:href="@{/floors/{id}(id=${floor.id})}" th:text="${floor.name}">
+        </a>
+        /
+        <a th:href="@{/locations/{id}(id=${room.id})}" th:text="${room.name}">
+        </a>
+       </p>
+      </div>
+      <div class="fg-inline">
+       <a class="fg-btn fg-outline" th:href="@{/sensors(locationId=${room.id})}">
+        Room sensors
+       </a>
+       <a class="fg-btn fg-primary" th:href="@{/sensors/{id}/edit(id=${sensor.id})}">
+        Move sensor
+       </a>
+      </div>
+     </section>
+     <div th:replace="~{fragments/feedback :: messages}">
+     </div>
+     <div class="fg-detail-grid">
+      <section class="panel">
+       <div class="panel-header">
+        <h2>
+         Sensor information
+        </h2>
+        <span class="fg-chip" th:text="${sensor.type}">
+        </span>
+       </div>
+       <dl class="building-facts">
+        <dt>
+         Code
+        </dt>
+        <dd th:text="${sensor.code}">
+        </dd>
+        <dt>
+         Location
+        </dt>
+        <dd th:text="${room.code + ' — ' + room.name}">
+        </dd>
+        <dt>
+         Coordinates (m)
+        </dt>
+        <dd th:text="${sensor.positionX + ' / ' + sensor.positionY + ' / ' + sensor.positionZ}">
+        </dd>
+        <dt>
+         Refresh count
+        </dt>
+        <dd th:text="${sensor.refreshCount}">
+        </dd>
+        <dt>
+         Reliability
+        </dt>
+        <dd th:text="${#numbers.formatDecimal(sensor.reliability * 100,1,2)} + '%'">
+        </dd>
+        <dt>
+         Created
+        </dt>
+        <dd th:text="${sensor.createdAt}">
+        </dd>
+       </dl>
+      </section>
+      <section class="panel">
+       <div class="panel-header">
+        <h2>
+         Room bounds
+        </h2>
+       </div>
+       <dl class="building-facts">
+        <dt>
+         Width
+        </dt>
+        <dd th:text="${room.widthMeters} + ' m'">
+        </dd>
+        <dt>
+         Depth
+        </dt>
+        <dd th:text="${room.depthMeters} + ' m'">
+        </dd>
+        <dt>
+         Height
+        </dt>
+        <dd th:text="${room.heightMeters} + ' m'">
+        </dd>
+       </dl>
+       <p class="fg-muted">
+        Sensor coordinates are relative to this room, not the entire floor.
+       </p>
+       <a class="fg-btn fg-outline" th:href="@{/locations/{id}(id=${room.id})}">
+        Open Location
+       </a>
+      </section>
+     </div>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

@@ -1,0 +1,43 @@
+# Maven / build outputs
+/target/
+**/target/
+/build/
+*.class
+*.log
+
+# Application runtime data: never commit real measurements or alerts
+/data/*
+!/data/.gitkeep
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+
+# IDE / platform files
+.classpath
+.project
+.settings/
+.factorypath
+.apt_generated/
+.springBeans
+.sts4-cache/
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+application-local.properties
+application-local.yml
+*.pem
+*.p12
+*.key
+
+# Maven wrapper JAR is part of the build toolchain if present.
+# Keep .mvn/wrapper/maven-wrapper.jar tracked when intentionally supplied.

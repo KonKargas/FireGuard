@@ -1,0 +1,100 @@
+.sensor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(min(100%,290px),1fr));
+    gap: 18px;
+}
+
+.sensor-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sensor-card h2 {
+    overflow-wrap: anywhere;
+    font-size: 18px;
+    margin: 0;
+}
+
+.sensor-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sensor-icon {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    background: var(--soft-accent);
+    border-radius: 12px;
+    font-size: 23px;
+}
+
+.sensor-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.sensor-metrics span {
+    border: 1px solid var(--line);
+    padding: 7px 9px;
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.sensor-filter {
+    margin-bottom: 18px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.sensor-filter input {
+    flex: 1;
+    min-width: 220px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--fg);
+    border-radius: 9px;
+    padding: 12px;
+    font: inherit;
+}
+
+.sensor-card[hidden],#sensorSearchEmpty[hidden] {
+    display: none!important;
+}
+
+.sensor-form-panel {
+    max-width: 750px;
+}
+
+.sensor-fields {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.sensor-fields .fg-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.sensor-form-actions {
+    margin-top: 24px;
+}
+
+@media(max-width:680px) {
+    .sensor-fields {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="stylesheet" th:href="@{/css/floors.css}"/>
+  <link rel="stylesheet" th:href="@{/css/locations.css}"/>
+  <link rel="stylesheet" th:href="@{/css/sensors.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        SENSOR POSITION
+       </p>
+       <h1>
+        Move Sensor
+       </h1>
+       <p class="subheading" th:text="${sensor.code + ' · ' + room.name}">
+        Sensor
+       </p>
+      </div>
+      <a class="fg-btn fg-outline" th:href="@{/sensors/{id}(id=${sensor.id})}">
+       Cancel
+      </a>
+     </section>
+     <div th:replace="~{fragments/feedback :: messages}">
+     </div>
+     <section class="panel sensor-form-panel">
+      <p class="fg-muted">
+       Coordinates are local to the room. Allowed ranges are X: 0 to width, Y: 0 to depth, Z: 0 to height.
+      </p>
+      <form method="post" th:action="@{/sensors/{id}/edit(id=${sensor.id})}" th:object="${form}">
+       <div class="sensor-fields">
+        <label class="fg-field">
+         <span>
+          X (m)
+         </span>
+         <input min="0" required="" step="any" th:attr="max=${room.widthMeters}" th:field="*{x}" type="number"/>
+        </label>
+        <label class="fg-field">
+         <span>
+          Y (m)
+         </span>
+         <input min="0" required="" step="any" th:attr="max=${room.depthMeters}" th:field="*{y}" type="number"/>
+        </label>
+        <label class="fg-field">
+         <span>
+          Z (m)
+         </span>
+         <input min="0" required="" step="any" th:attr="max=${room.heightMeters}" th:field="*{z}" type="number"/>
+        </label>
+       </div>
+       <div class="fg-inline sensor-form-actions">
+        <button class="fg-btn fg-primary" type="submit">
+         Save position
+        </button>
+        <a class="fg-btn fg-outline" th:href="@{/sensors/{id}(id=${sensor.id})}">
+         Cancel
+        </a>
+       </div>
+      </form>
+     </section>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

@@ -1,0 +1,182 @@
+.location-section-heading {
+    font-size: 16px;
+    margin: 24px 0 12px;
+}
+
+.location-card .floor-stats {
+    margin-top: auto;
+}
+
+.location-plan {
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    min-height: 320px;
+    overflow: auto;
+    position: relative;
+    background: var(--bg);
+}
+
+.location-plan svg {
+    display: block;
+    width: 100%;
+    min-width: 560px;
+    height: auto;
+}
+
+.location-plan-room-data {
+    display: none;
+}
+
+.location-plan-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 12px;
+}
+
+.room-outline {
+    fill: var(--soft-accent);
+    stroke: var(--accent);
+    stroke-width: 1.5;
+}
+
+.room-outline:hover {
+    fill: var(--accent);
+    fill-opacity: .32;
+    stroke-width: 2.5;
+}
+
+.room-text {
+    fill: var(--fg);
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.grid-line {
+    stroke: var(--line);
+    stroke-width: .65;
+}
+
+.axis-label {
+    fill: var(--muted);
+    font-size: 10px;
+}
+
+.room-link {
+    cursor: pointer;
+}
+
+.location-card[hidden],#locationSearchEmpty[hidden] {
+    display: none!important;
+}
+
+/* Location V2 interactive floor editor */
+
+.location-plan {
+    overflow: auto;
+    max-width: 100%;
+    touch-action: pan-x pan-y;
+}
+
+.location-plan svg {
+    max-width: none;
+    display: block;
+    touch-action: none;
+}
+
+.layout-space {
+    cursor: grab;
+}
+
+.layout-space:active {
+    cursor: grabbing;
+}
+
+.layout-room {
+    fill-opacity: .28;
+    stroke: #76aecd;
+    stroke-width: 2;
+}
+
+.layout-space.layout-selected .layout-room {
+    stroke: #ff725e;
+    stroke-width: 3;
+}
+
+.layout-space.layout-overlap .layout-room {
+    stroke: #e74444;
+    fill: #e74444;
+    fill-opacity: .36;
+}
+
+.resize-handle {
+    fill: #f36b56;
+    stroke: white;
+    stroke-width: 1;
+    cursor: nwse-resize;
+}
+
+.layout-editor-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 15px 4px;
+    color: var(--text-muted,#a1aabb);
+    font-size: .88rem;
+}
+
+.layout-editor-controls label {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.layout-inspector {
+    padding: 16px;
+    border: 1px solid var(--border-color,#405064);
+    border-radius: 10px;
+    margin: 12px 0;
+}
+
+.layout-inspector[hidden] {
+    display: none;
+}
+
+.layout-edit-fields {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(90px,1fr));
+    gap: 12px;
+    margin: 12px 0;
+}
+
+.layout-edit-fields label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: .83rem;
+}
+
+.layout-edit-fields input {
+    width: 100%;
+    padding: 9px;
+    border-radius: 6px;
+    border: 1px solid #607087;
+    background: var(--panel-bg,#172335);
+    color: inherit;
+}
+
+.layout-conflict {
+    display: block;
+    color: #e66a62;
+    margin-top: 8px;
+}
+
+@media(max-width:650px) {
+    .layout-edit-fields {
+        grid-template-columns: repeat(2,minmax(90px,1fr));
+    }
+}

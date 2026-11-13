@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="stylesheet" th:href="@{/css/floors.css}"/>
+  <link rel="stylesheet" th:href="@{/css/locations.css}"/>
+  <link rel="stylesheet" th:href="@{/css/location-preview.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        SPACE GEOMETRY
+       </p>
+       <h1 th:text="${pageTitle}">
+        Location
+       </h1>
+       <p class="subheading">
+        All coordinates are relative to the floor origin, in meters.
+       </p>
+      </div>
+      <a class="fg-btn fg-outline" th:href="@{/locations}">
+       ← Back
+      </a>
+     </section>
+     <div th:replace="~{fragments/feedback :: messages}">
+     </div>
+     <div class="location-form-layout">
+      <form class="panel building-form location-main-form" method="post" th:action="${locationId == null} ? @{/locations} : @{/locations/{id}/edit(id=${locationId})}" th:attr="data-edit-id=${locationId}" th:object="${form}">
+       <div class="fg-fields">
+        <div class="fg-field fg-full">
+         <label>
+          Floor *
+         </label>
+         <select required="" th:disabled="${locationId != null}" th:field="*{floorId}">
+          <option value="">
+           Select floor
+          </option>
+          <option th:each="opt : ${floorOptions}" th:text="${opt.label}" th:value="${opt.id}">
+          </option>
+         </select>
+         <input th:field="*{floorId}" th:if="${locationId != null}" type="hidden"/>
+        </div>
+        <div class="fg-field">
+         <label>
+          Code *
+         </label>
+         <input maxlength="20" placeholder="101" required="" th:field="*{code}"/>
+        </div>
+        <div class="fg-field">
+         <label>
+          Name *
+         </label>
+         <input maxlength="100" placeholder="Room 101" required="" th:field="*{name}"/>
+        </div>
+        <div class="fg-field">
+         <label>
+          Space type *
+         </label>
+         <select required="" th:field="*{type}">
+          <option th:each="t : ${locationTypes}" th:text="${#strings.replace(t.name(), '_', ' ')}" th:value="${t}">
+          </option>
+         </select>
+        </div>
+        <div class="fg-field" th:if="${locationId == null}">
+         <label>
+          Install sensors
+         </label>
+         <select th:field="*{installSensors}">
+          <option value="true">
+           Yes — temperature + light
+          </option>
+          <option value="false">
+           No — architectural space only
+          </option>
+         </select>
+        </div>
+        <div class="fg-field fg-full">
+         <label>
+          Description
+         </label>
+         <textarea maxlength="500" rows="3" th:field="*{description}"></textarea>
+        </div>
+       </div>
+       <h2 class="location-section-heading">
+        Position (m)
+       </h2>
+       <div class="fg-fields">
+        <div class="fg-field">
+         <label>
+          X *
+         </label>
+         <input required="" step="any" th:field="*{x}" type="number"/>
+        </div>
+        <div class="fg-field">
+         <label>
+          Y *
+         </label>
+         <input required="" step="any" th:field="*{y}" type="number"/>
+        </div>
+        <div class="fg-field">
+         <label>
+          Z *
+         </label>
+         <input required="" step="any" th:field="*{z}" type="number"/>
+        </div>
+       </div>
+       <h2 class="location-section-heading">
+        Dimensions (m)
+       </h2>
+       <div class="fg-fields">
+        <div class="fg-field">
+         <label>
+          Width *
+         </label>
+         <input min="0.001" required="" step="any" th:field="*{width}" type="number"/>
+        </div>
+        <div class="fg-field">
+         <label>
+          Depth *
+         </label>
+         <input min="0.001" required="" step="any" th:field="*{depth}" type="number"/>
+        </div>
+        <div class="fg-field">
+         <label>
+          Height *
+         </label>
+         <input min="0.001" required="" step="any" th:field="*{height}" type="number"/>
+        </div>
+       </div>
+       <p class="fg-muted" th:if="${locationId == null}">
+        Choose whether the space needs sensors. Corridors, bathrooms and staircases can be drawn without sensors.
+       </p>
+       <p class="fg-muted" th:if="${locationId != null}">
+        Resizing is rejected if an existing sensor would be outside the new room.
+       </p>
+       <div class="fg-form-actions">
+        <a class="fg-btn fg-outline" th:href="@{/locations}">
+         Cancel
+        </a>
+        <button class="fg-btn fg-primary" th:text="${locationId == null} ? 'Create Location' : 'Save Changes'">
+         Save
+        </button>
+       </div>
+      </form>
+      <aside aria-label="Floor placement preview" class="panel location-mini-panel">
+       <div class="location-mini-header">
+        <div>
+         <h2>
+          Floor placement preview
+         </h2>
+         <p class="fg-muted">
+          Existing spaces and the proposed location.
+         </p>
+        </div>
+        <span class="location-mini-status" id="locationPreviewState" role="status">
+         Select a floor
+        </span>
+       </div>
+       <div class="location-mini-canvas">
+        <svg aria-label="2D preview of locations on the selected floor" id="locationPreviewSvg" role="img" viewbox="0 0 520 380">
+         <text fill="currentColor" text-anchor="middle" x="260" y="190">
+          Select a floor to preview the layout
+         </text>
+        </svg>
+       </div>
+       <div class="location-mini-legend">
+        <span>
+         <i class="location-mini-dot existing">
+         </i>
+         Existing space
+        </span>
+        <span>
+         <i class="location-mini-dot proposed">
+         </i>
+         New / edited space
+        </span>
+        <span>
+         <i class="location-mini-dot overlap">
+         </i>
+         Overlap
+        </span>
+       </div>
+       <p class="fg-muted location-mini-help" id="locationPreviewHelp">
+        Changes in position or dimensions update the preview automatically. This preview is read-only.
+       </p>
+      </aside>
+     </div>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+  <script defer="" th:src="@{/js/locations.js}">
+  </script>
+  <script defer="" th:src="@{/js/location-preview.js}">
+  </script>
+ </body>
+</html>

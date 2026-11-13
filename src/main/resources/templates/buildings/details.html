@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        BUILDING DETAILS
+       </p>
+       <h1 th:text="${building.name}">
+        Building
+       </h1>
+       <p class="subheading">
+        Review the building and its floor structure.
+       </p>
+      </div>
+      <div class="fg-inline">
+       <a class="fg-btn fg-outline" th:href="@{/buildings}">
+        ← Buildings
+       </a>
+       <a class="fg-btn fg-primary" th:href="@{/buildings/{id}/edit(id=${building.id})}">
+        Edit Building
+       </a>
+      </div>
+     </section>
+     <div th:replace="~{fragments/feedback :: messages}">
+     </div>
+     <div class="fg-detail-grid">
+      <section class="panel">
+       <div class="panel-header">
+        <h2>
+         Overview
+        </h2>
+        <span class="fg-chip" th:text="${building.type.displayName}">
+         Hotel
+        </span>
+       </div>
+       <dl class="building-facts">
+        <dt>
+         Name
+        </dt>
+        <dd th:text="${building.name}">
+         Name
+        </dd>
+        <dt>
+         Address
+        </dt>
+        <dd th:text="${building.address ?: 'Not provided'}">
+         Address
+        </dd>
+        <dt>
+         Created
+        </dt>
+        <dd th:text="${building.createdAt != null ? #temporals.format(building.createdAt, 'dd MMM yyyy HH:mm') : '—'}">
+         Date
+        </dd>
+        <dt>
+         Description
+        </dt>
+        <dd th:text="${building.description ?: 'Not provided'}">
+         Description
+        </dd>
+       </dl>
+      </section>
+      <section class="panel">
+       <div class="panel-header">
+        <h2>
+         Floors
+        </h2>
+        <span class="fg-chip" th:text="${#lists.size(floors)} + ' total'">
+         0 total
+        </span>
+       </div>
+       <div class="fg-muted" th:if="${#lists.isEmpty(floors)}">
+        No floors added yet. Create the first floor for this building.
+       </div>
+       <a class="fg-floor-row fg-floor-link" th:each="floor : ${floors}" th:href="@{/floors/{id}(id=${floor.id})}">
+        <span class="building-emblem">
+         ▤
+        </span>
+        <div>
+         <strong th:text="${floor.name}">
+          Ground floor
+         </strong>
+         <small th:text="'Level ' + ${floor.levelNumber} + ' · ' + ${floor.elevationMeters} + ' m'">
+          Level
+         </small>
+        </div>
+       </a>
+       <div class="fg-inline">
+        <a class="fg-btn fg-outline" th:href="@{/floors(buildingId=${building.id})}">
+         View all floors
+        </a>
+        <a class="fg-btn fg-primary" th:href="@{/floors/new(buildingId=${building.id})}">
+         + Add Floor
+        </a>
+       </div>
+      </section>
+     </div>
+     <section class="panel fg-danger-zone">
+      <h2>
+       Danger zone
+      </h2>
+      <p class="fg-muted">
+       Only buildings without floors can be deleted. Existing structures are protected.
+      </p>
+      <form data-confirm="Delete this building? This cannot be undone." method="post" th:action="@{/buildings/{id}/delete(id=${building.id})}">
+       <button class="fg-btn fg-danger" th:disabled="${!#lists.isEmpty(floors)}" type="submit">
+        Delete Building
+       </button>
+      </form>
+     </section>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

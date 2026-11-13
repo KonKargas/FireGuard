@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        BUILDING MANAGEMENT
+       </p>
+       <h1 th:text="${pageTitle}">
+        New Building
+       </h1>
+       <p class="subheading">
+        Set up the building information. Floors are managed separately.
+       </p>
+      </div>
+      <a class="fg-btn fg-outline" th:href="${buildingId == null} ? @{/buildings} : @{/buildings/{id}(id=${buildingId})}">
+       ← Cancel
+      </a>
+     </section>
+     <div th:replace="~{fragments/feedback :: messages}">
+     </div>
+     <form class="panel building-form" method="post" th:action="${buildingId == null} ? @{/buildings} : @{/buildings/{id}/edit(id=${buildingId})}" th:object="${form}">
+      <div class="fg-fields">
+       <div class="fg-field">
+        <label for="name">
+         Building name *
+        </label>
+        <input id="name" maxlength="100" placeholder="e.g. Hotel Ilios" required="" th:field="*{name}" type="text"/>
+       </div>
+       <div class="fg-field">
+        <label for="type">
+         Building type *
+        </label>
+        <select id="type" required="" th:field="*{type}">
+         <option value="">
+          Select type
+         </option>
+         <option th:each="type : ${buildingTypes}" th:text="${type.displayName}" th:value="${type.name()}">
+          Type
+         </option>
+        </select>
+       </div>
+       <div class="fg-field fg-full">
+        <label for="address">
+         Address
+        </label>
+        <input id="address" maxlength="255" placeholder="Optional address" th:field="*{address}" type="text"/>
+       </div>
+       <div class="fg-field fg-full">
+        <label for="description">
+         Description
+        </label>
+        <textarea id="description" maxlength="1000" placeholder="Optional description" rows="5" th:field="*{description}"></textarea>
+       </div>
+      </div>
+      <div class="fg-form-actions">
+       <a class="fg-btn fg-outline" th:href="@{/buildings}">
+        Back
+       </a>
+       <button class="fg-btn fg-primary" th:text="${buildingId == null} ? 'Create Building' : 'Save Changes'" type="submit">
+        Save
+       </button>
+      </div>
+     </form>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

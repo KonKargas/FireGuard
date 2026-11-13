@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/alerts.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        OPERATIONS / EVENT HISTORY
+       </p>
+       <h1>
+        Fire Alerts
+       </h1>
+       <p class="subheading">
+        Simulated detection episodes recorded during sensor refreshes.
+       </p>
+      </div>
+      <a class="alert-button outline" th:href="@{/simulation}">
+       Open Simulation
+      </a>
+     </section>
+     <section class="alert-summary">
+      <article class="panel">
+       <span>
+        All events
+       </span>
+       <strong th:text="${totalCount}">
+        0
+       </strong>
+      </article>
+      <article class="panel">
+       <span>
+        Active
+       </span>
+       <strong class="alert-hot" th:text="${activeCount}">
+        0
+       </strong>
+      </article>
+      <article class="panel">
+       <span>
+        Resolved
+       </span>
+       <strong class="alert-good" th:text="${resolvedCount}">
+        0
+       </strong>
+      </article>
+     </section>
+     <section class="panel alert-list-panel">
+      <div class="alert-section-head">
+       <h2>
+        Detection history
+       </h2>
+       <span th:text="${#lists.size(alerts)} + ' matching events'">
+        0 events
+       </span>
+      </div>
+      <form class="alert-filters" method="get" th:action="@{/alerts}">
+       <label>
+        Status
+        <select name="status">
+         <option th:selected="${status == 'ALL'}" value="ALL">
+          All statuses
+         </option>
+         <option th:selected="${status == 'ACTIVE'}" value="ACTIVE">
+          Active
+         </option>
+         <option th:selected="${status == 'RESOLVED'}" value="RESOLVED">
+          Resolved
+         </option>
+        </select>
+       </label>
+       <label>
+        Building
+        <select name="buildingId">
+         <option value="">
+          All buildings
+         </option>
+         <option th:each="b : ${buildings}" th:selected="${buildingId != null and buildingId == b.id}" th:text="${b.name}" th:value="${b.id}">
+          Building
+         </option>
+        </select>
+       </label>
+       <button class="alert-button" type="submit">
+        Apply filters
+       </button>
+       <a class="alert-button outline" th:href="@{/alerts}">
+        Clear
+       </a>
+      </form>
+      <div class="alert-empty" th:if="${#lists.isEmpty(alerts)}">
+       <span>
+        ◎
+       </span>
+       <h2>
+        No matching alerts
+       </h2>
+       <p>
+        Run a simulation to generate readings. An alert is saved only when all three detection conditions are met.
+       </p>
+      </div>
+      <div class="alert-table-wrap" th:unless="${#lists.isEmpty(alerts)}">
+       <table class="alert-table">
+        <thead>
+         <tr>
+          <th>
+           Event
+          </th>
+          <th>
+           Location
+          </th>
+          <th>
+           Detected
+          </th>
+          <th>
+           Temperature
+          </th>
+          <th>
+           Luminosity
+          </th>
+          <th>
+           Reliability
+          </th>
+          <th>
+           Status
+          </th>
+          <th>
+          </th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr th:each="a : ${alerts}">
+          <td th:text="'FG-' + ${a.id}">
+           FG-1
+          </td>
+          <td>
+           <a th:href="@{/locations/{id}(id=${a.locationId})}" th:text="${a.locationCode + ' · ' + a.locationName}">
+            Room
+           </a>
+           <small th:text="${a.buildingName + ' / ' + a.floorName}">
+            Building / Floor
+           </small>
+          </td>
+          <td th:text="${#temporals.format(a.detectedAt, 'dd MMM yyyy, HH:mm:ss')}">
+           Time
+          </td>
+          <td th:text="${#numbers.formatDecimal(a.temperature, 1, 0)} + ' °C'">
+           T
+          </td>
+          <td th:text="${#numbers.formatDecimal(a.luminosity, 1, 2)}">
+           L
+          </td>
+          <td th:text="${#numbers.formatDecimal(a.combinedReliability * 100, 1, 2)} + '%'">
+           R
+          </td>
+          <td>
+           <span class="alert-state" th:classappend="${a.status.name() == 'ACTIVE'} ? ' active' : ' resolved'" th:text="${a.status}">
+            ACTIVE
+           </span>
+          </td>
+          <td>
+           <a class="alert-view" th:href="@{/alerts/{id}(id=${a.id})}">
+            View details
+           </a>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </section>
+     <p class="alert-note">
+      Educational fire detection simulation only — this is not a real emergency notification system.
+     </p>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

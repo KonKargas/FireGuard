@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Simulation | FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/simulation.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        OPERATIONS
+       </p>
+       <h1>
+        Simulation Lab
+       </h1>
+       <p class="subheading">
+        Generate readings and evaluate simulated fire conditions.
+       </p>
+      </div>
+      <span class="read-only-tag">
+       Educational simulation only
+      </span>
+     </section>
+     <div class="sim-notice sim-success" th:if="${success}" th:text="${success}">
+     </div>
+     <div class="sim-notice sim-error" th:if="${error}" th:text="${error}">
+     </div>
+     <section class="sim-grid">
+      <article class="panel">
+       <div class="sim-card-title">
+        <span class="sim-icon">
+         ◈
+        </span>
+        <div>
+         <h2>
+          Refresh a location
+         </h2>
+         <p>
+          One room · two sensors · one simulation step
+         </p>
+        </div>
+       </div>
+       <form class="sim-form" method="post" th:action="@{/simulation/location}">
+        <label for="locationId">
+         Select location
+        </label>
+        <select id="locationId" name="locationId" required="" th:disabled="${#lists.isEmpty(rooms)}">
+         <option value="">
+          Choose a room
+         </option>
+         <option th:each="r:${rooms}" th:text="${r.buildingName + ' / ' + r.floorName + ' / ' + r.code + ' · ' + r.name}" th:value="${r.id}">
+         </option>
+        </select>
+        <button class="sim-button" th:disabled="${#lists.isEmpty(rooms)}" type="submit">
+         Run location simulation
+        </button>
+       </form>
+       <p class="sim-muted" th:if="${#lists.isEmpty(rooms)}">
+        No rooms available. Create a location first.
+       </p>
+      </article>
+      <article class="panel">
+       <div class="sim-card-title">
+        <span class="sim-icon">
+         ▥
+        </span>
+        <div>
+         <h2>
+          Refresh a building
+         </h2>
+         <p>
+          All rooms · one atomic database transaction
+         </p>
+        </div>
+       </div>
+       <form class="sim-form" method="post" th:action="@{/simulation/building}">
+        <label for="buildingId">
+         Select building
+        </label>
+        <select id="buildingId" name="buildingId" required="">
+         <option value="">
+          Choose a building
+         </option>
+         <option th:each="b:${buildings}" th:selected="${buildingId != null and buildingId == b.id}" th:text="${b.name}" th:value="${b.id}">
+         </option>
+        </select>
+        <button class="sim-button" th:disabled="${#lists.isEmpty(buildings)}" type="submit">
+         Run building simulation
+        </button>
+       </form>
+       <p class="sim-muted">
+        A building must contain at least one room with both sensors.
+       </p>
+      </article>
+     </section>
+     <section class="panel sim-results" th:if="${results != null}">
+      <div class="sim-results-title">
+       <div>
+        <p class="eyebrow">
+         LATEST EXECUTION
+        </p>
+        <h2>
+         Simulation results
+        </h2>
+       </div>
+       <span class="sim-counter" th:text="${#lists.size(results)} + ' locations'">
+        0 locations
+       </span>
+      </div>
+      <div class="sim-table-wrap">
+       <table class="sim-table">
+        <thead>
+         <tr>
+          <th>
+           Location
+          </th>
+          <th>
+           Step
+          </th>
+          <th>
+           Temperature
+          </th>
+          <th>
+           Luminosity
+          </th>
+          <th>
+           Temp. reliability
+          </th>
+          <th>
+           Light reliability
+          </th>
+          <th>
+           Combined
+          </th>
+          <th>
+           Status
+          </th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr th:each="r:${results}">
+          <td>
+           <a th:href="@{/locations/{id}(id=${r.id})}" th:text="${r.code + ' · ' + r.name}">
+            Room
+           </a>
+           <small th:text="${r.buildingName + ' / ' + r.floorName}">
+           </small>
+          </td>
+          <td th:text="${r.step}">
+           1
+          </td>
+          <td th:text="${#numbers.formatDecimal(r.temperature,1,0)} + ' °C'">
+           —
+          </td>
+          <td th:text="${#numbers.formatDecimal(r.luminosity,1,2)}">
+           —
+          </td>
+          <td th:text="${#numbers.formatDecimal(r.temperatureReliability,1,2)} + '%'">
+           —
+          </td>
+          <td th:text="${#numbers.formatDecimal(r.luminosityReliability,1,2)} + '%'">
+           —
+          </td>
+          <td th:text="${#numbers.formatDecimal(r.combinedReliability,1,2)} + '%'">
+           —
+          </td>
+          <td>
+           <span class="sim-status" th:classappend="${r.fireDetected} ? ' danger' : ' safe'" th:text="${r.fireDetected} ? 'FIRE DETECTED' : 'Normal'">
+            Normal
+           </span>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </section>
+     <section class="panel sim-empty" th:unless="${results != null}">
+      <span class="sim-empty-icon">
+       ◉
+      </span>
+      <h2>
+       Ready to simulate
+      </h2>
+      <p>
+       Run a location or building simulation to display temperature, luminosity, reliability and detection results here.
+      </p>
+     </section>
+     <p class="sim-footnote">
+      Detection requires temperature &gt; 50°C, luminosity &gt; 140 and combined sensor reliability &gt; 90%. Readings and alerts are stored in SQLite. This system is not a real fire alarm.
+     </p>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>

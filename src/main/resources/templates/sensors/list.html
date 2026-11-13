@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title th:text="${pageTitle} + ' | FireGuard'">
+   FireGuard
+  </title>
+  <script>
+   try{document.documentElement.dataset.theme=localStorage.getItem('fireguard-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+  </script>
+  <link rel="stylesheet" th:href="@{/css/fireguard.css}"/>
+  <link rel="stylesheet" th:href="@{/css/management.css}"/>
+  <link rel="stylesheet" th:href="@{/css/buildings.css}"/>
+  <link rel="stylesheet" th:href="@{/css/floors.css}"/>
+  <link rel="stylesheet" th:href="@{/css/locations.css}"/>
+  <link rel="stylesheet" th:href="@{/css/sensors.css}"/>
+  <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+ </head>
+ <body>
+  <div class="app-shell">
+   <div class="sidebar-overlay" id="sidebarOverlay">
+   </div>
+   <div th:replace="~{fragments/layout :: sidebar}">
+   </div>
+   <div class="main-column">
+    <div th:replace="~{fragments/layout :: topbar}">
+    </div>
+    <main class="main-content">
+     <section class="page-heading">
+      <div>
+       <p class="eyebrow">
+        MONITORING
+       </p>
+       <h1>
+        Sensors
+       </h1>
+       <p class="subheading">
+        Temperature, luminosity, positioning and reliability.
+       </p>
+      </div>
+      <a class="fg-btn fg-outline" th:href="@{/locations}">
+       View locations
+      </a>
+     </section>
+     <div th:replace="~{fragments/feedback :: messages}">
+     </div>
+     <div class="panel sensor-filter">
+      <input aria-label="Search sensors" id="sensorSearch" placeholder="Search code, type, building or room…" type="search"/>
+      <a class="fg-btn fg-outline" th:href="@{/sensors}" th:if="${locationId != null}">
+       Clear location filter
+      </a>
+     </div>
+     <section class="panel fg-empty" th:if="${#lists.isEmpty(rows)}">
+      <h2>
+       No sensors found
+      </h2>
+      <p>
+       Sensors are installed automatically when a location is created.
+      </p>
+     </section>
+     <section class="sensor-grid">
+      <article class="panel sensor-card" th:attr="data-search=${s.code + ' ' + s.type + ' ' + s.buildingName + ' ' + s.floorName + ' ' + s.locationName}" th:each="s : ${rows}">
+       <div class="sensor-card-head">
+        <span class="sensor-icon" th:text="${s.type == 'TEMPERATURE' ? '🌡' : '☀'}">
+         ◉
+        </span>
+        <span class="fg-chip" th:text="${s.type}">
+         TEMPERATURE
+        </span>
+       </div>
+       <h2 th:text="${s.code}">
+        Sensor
+       </h2>
+       <p class="fg-muted" th:text="${s.buildingName + ' / ' + s.floorName + ' / ' + s.locationName}">
+        Location
+       </p>
+       <div class="sensor-metrics">
+        <span th:text="${#numbers.formatDecimal(s.reliabilityPercent,1,2)} + '% reliability'">
+         100%
+        </span>
+        <span th:text="${s.refreshCount} + ' refreshes'">
+         0
+        </span>
+       </div>
+       <p class="fg-small" th:text="${'Position: (' + s.x + ', ' + s.y + ', ' + s.z + ') m'}">
+       </p>
+       <div class="fg-card-actions">
+        <a class="fg-btn fg-outline" th:href="@{/sensors/{id}(id=${s.id})}">
+         Details
+        </a>
+        <a class="fg-btn fg-text" th:href="@{/sensors/{id}/edit(id=${s.id})}">
+         Move
+        </a>
+       </div>
+      </article>
+     </section>
+     <p class="fg-muted" hidden="" id="sensorSearchEmpty">
+      No matching sensors.
+     </p>
+    </main>
+    <div th:replace="~{fragments/layout :: footer}">
+    </div>
+   </div>
+  </div>
+  <script defer="" th:src="@{/js/fireguard.js}">
+  </script>
+ </body>
+</html>
